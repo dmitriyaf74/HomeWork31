@@ -13,7 +13,7 @@ namespace RegularCustomer.Classes
     internal class ObsCol : ObservableCollection<Item>;
     internal class Shop
     {
-        private ObsCol Items = new ObsCol();
+        public ObsCol Items = new ObsCol();
 
         private readonly List<Customer> Customers = new();
         public void Subscribe(Customer newSubscriber)
@@ -71,14 +71,18 @@ namespace RegularCustomer.Classes
         }
 
 
+
         public void Add(int _Id, string _Name)
         {
             Items.Add(new Item(_Id, _Name));
         }
-        public void Remove(int index)
+        public void Remove(int _Id)
         {
-            if (index >= 0 || index < Items.Count)
-              Items.RemoveAt(index);
+            var items = Items.Where(p => p.Id == _Id).ToList();
+            if (items.Count() > 0)
+            {
+                Items.Remove(items[0]);
+            }
         }
     }
 }

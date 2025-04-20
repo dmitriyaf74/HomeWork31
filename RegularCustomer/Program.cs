@@ -7,18 +7,52 @@ namespace RegularCustomer
     internal class Program
     {
 
+        static void RunProgram(Shop shop)
+        {
+            ConsoleKeyInfo keyInfo;
+            int goodIndex = 0;
+            int custIndex = 0;
+            shop.Subscribe(new Customer($"Test Customer {++custIndex}", x => Console.WriteLine(x)));
+            Console.WriteLine($"Подписался 'Test Customer {custIndex}'");
+
+            do
+            {
+                keyInfo = Console.ReadKey(true);
+                switch(keyInfo.Key)
+                {
+                    case ConsoleKey.S:
+                        shop.Subscribe(new Customer($"Test Customer {++custIndex}", x => Console.WriteLine(x)));
+                        Console.WriteLine($"Подписался 'Test Customer {custIndex}'");
+                        break;
+                    case ConsoleKey.A:
+                        shop.Add(++goodIndex, $"Товар от<{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}>");
+                        break;
+                    case ConsoleKey.D:
+                        Console.WriteLine("Укажите Id товара для удаления и нажмите Enter:");
+                        foreach (var item in shop.Items)
+                        {
+                            Console.WriteLine($"Id={item.Id}, Name={item.Name}");
+                        }
+                        string skey = Console.ReadLine();
+                        int key;
+                        if (int.TryParse(skey, out key))
+                            shop.Remove(key);
+                        break;
+                    case ConsoleKey.X:
+                        return;
+                }
+
+            } while (true); 
+
+        }
+
         static void Main(string[] args)
         {
+            Console.WriteLine("Текущая дата и время: " + DateTime.Now);
             var shop = new Shop();
 
-            shop.Subscribe(new Customer("Test Customer 1", x => Console.WriteLine(x)));
-            shop.Add(1, "Товар 1");
-            shop.Add(2, "Товар 2");
 
-            shop.Subscribe(new Customer("Test Customer 2", x => Console.WriteLine(x)));
-            shop.Remove(1);
-            shop.Add(3, "Товар 3");
-            shop.Add(4, "Товар 4");
+            RunProgram(shop);
         }
     }
 }
